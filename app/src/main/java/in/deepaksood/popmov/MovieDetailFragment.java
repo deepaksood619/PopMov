@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -45,6 +44,8 @@ public class MovieDetailFragment extends Fragment {
     MovieModel movieModel;
     List<TrailerModel> trailerModelList = new ArrayList<>();
     List<ReviewModel> reviewModelList = new ArrayList<>();
+
+    ImageView ivSetFav;
 
     public MovieDetailFragment() {
     }
@@ -84,6 +85,8 @@ public class MovieDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.movie_detail, container, false);
 
+        ivSetFav = (ImageView) rootView.findViewById(R.id.iv_set_fav);
+
         ImageView ivDetailMoviePoster = (ImageView) rootView.findViewById(R.id.iv_detail_movie_poster);
 
         TextView tvOriginalTitle = (TextView) rootView.findViewById(R.id.tv_original_title);
@@ -112,6 +115,21 @@ public class MovieDetailFragment extends Fragment {
 
         lvTrailers = (ListView) rootView.findViewById(R.id.lv_trailers);
         lvReviews = (ListView) rootView.findViewById(R.id.lv_reviews);
+
+        ivSetFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!movieModel.isFavorite()) {
+                    ivSetFav.setImageResource(R.drawable.ic_favorite_solid);
+                    movieModel.setFavorite(true);
+
+                }
+                else {
+                    ivSetFav.setImageResource(R.drawable.ic_favorite_border);
+                    movieModel.setFavorite(false);
+                }
+            }
+        });
 
         return rootView;
     }
@@ -158,7 +176,7 @@ public class MovieDetailFragment extends Fragment {
                         }
                         Log.v(TAG,"size: "+trailerModelList.size());
                         lvTrailers.setAdapter(new TrailerListAdapter(getContext(), trailerModelList));
-                        setListViewHeightBasedOnChildren(lvTrailers);
+                        Utility.setListViewHeightBasedOnChildren(lvTrailers);
 
                     }
                 }, new Response.ErrorListener() {
@@ -196,9 +214,10 @@ public class MovieDetailFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                         Log.v(TAG,"size: "+reviewModelList.size());
                         lvReviews.setAdapter(new ReviewListAdapter(getContext(), reviewModelList));
-                        setListViewHeightBasedOnChildren(lvReviews);
+                        Utility.setListViewHeightBasedOnChildren(lvReviews);
 
                     }
                 }, new Response.ErrorListener() {
@@ -210,30 +229,4 @@ public class MovieDetailFragment extends Fragment {
 
         Volley.newRequestQueue(this.getActivity()).add(stringRequest);
     }
-
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null)
-            return;
-
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(
-                listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-        int totalHeight = 0;
-
-        View view = null;
-
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            view = listAdapter.getView(i, view, listView);
-            if (i == 0)
-                view.setLayoutParams(new ViewGroup.LayoutParams(
-                        desiredWidth, CollapsingToolbarLayout.LayoutParams.WRAP_CONTENT));
-
-            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += view.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-    }
-
 }

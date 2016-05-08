@@ -31,8 +31,6 @@ public class TrailerListAdapter extends BaseAdapter {
     public TrailerListAdapter(Context context, List<TrailerModel> trailerModels) {
         this.context = context;
         this.trailerModels = trailerModels;
-        Log.v(TAG,"size1: "+this.trailerModels.size());
-        Log.v(TAG,"size2: "+trailerModels.size());
         layoutInflater = (LayoutInflater)context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -67,7 +65,6 @@ public class TrailerListAdapter extends BaseAdapter {
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "pos: "+position, Toast.LENGTH_SHORT).show();
                 context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(YOUTUBE_BASE_URL+trailerModels.get(position).getKey())));
             }
         });

@@ -21,6 +21,7 @@ public class MovieModel implements Serializable {
     private float vote_count;
     private boolean video;
     private float vote_average;
+    private boolean favorite;
 
     public String getTitle() {
         return title;
@@ -134,4 +135,11 @@ public class MovieModel implements Serializable {
         this.vote_average = vote_average;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
 }

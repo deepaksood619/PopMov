@@ -8,22 +8,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:src="@drawable/ic_description"/>
 
-        <TextView
-            android:id="@+id/tv_play_trailer"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="author name"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/text_black"/>
+            android:layout_marginLeft="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_play_trailer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="author name"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/text_black"/>
+
+            <TextView
+                android:id="@+id/tv_review_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="content"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -1,6 +1,7 @@
 package in.deepaksood.popmov.adapterpackage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,13 @@ public class ReviewListAdapter extends BaseAdapter {
         this.reviewModels = reviewModels;
         Log.v(TAG,"size1: "+this.reviewModels.size());
         Log.v(TAG,"size2: "+reviewModels.size());
-        layoutInflater = (LayoutInflater)context.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        try {
+            layoutInflater = (LayoutInflater)context.
+                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        } catch (Exception e) {
+            Log.v(TAG,"Exception e: "+e);
+        }
+
     }
 
     @Override
@@ -50,15 +56,18 @@ public class ReviewListAdapter extends BaseAdapter {
 
     public class Holder {
         TextView tvPlayTrailer;
+        TextView tvReviewContent;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder = new Holder();
-        View rowView = layoutInflater.inflate(R.layout.trailer_list_item, null);
+        View rowView = layoutInflater.inflate(R.layout.review_list_item, null);
 
         holder.tvPlayTrailer = (TextView) rowView.findViewById(R.id.tv_play_trailer);
+        holder.tvReviewContent = (TextView) rowView.findViewById(R.id.tv_review_content);
         holder.tvPlayTrailer.setText(reviewModels.get(position).getAuthor());
+        holder.tvReviewContent.setText(reviewModels.get(position).getContent());
 
         return rowView;
     }
