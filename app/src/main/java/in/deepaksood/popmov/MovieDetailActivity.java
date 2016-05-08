@@ -50,17 +50,6 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
-        MovieModel movieModel = (MovieModel) getIntent().getSerializableExtra("MOVIE_OBJECT");
-        Log.v(TAG,"cover: "+movieModel.getBackdrop_path());
-
-        ImageView ivMovieCoverPicture = (ImageView) findViewById(R.id.iv_movie_cover_poster);
-        Picasso.with(this)
-                .load(movieModel.getBackdrop_path())
-                //.resize(30,30)
-                .placeholder(R.drawable.ph_cover_picture)
-                .error(R.drawable.ph_cover_picture)
-                .into(ivMovieCoverPicture);
-
         if (savedInstanceState == null) {
 
             Bundle arguments = new Bundle();

@@ -135,6 +135,7 @@ public class MovieListActivity extends AppCompatActivity {
     public void populateList(String string) {
         movieModelList.clear();
         String url = buildQuery(string);
+        Log.v(TAG,"finalUrl: "+url);
         requestData(url);
     }
 
