@@ -3,6 +3,7 @@ package in.deepaksood.popmov.adapterpackage;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,10 @@ import in.deepaksood.popmov.moviemodelpackage.TrailerModel;
 //adapter for trailer listview
 public class TrailerListAdapter extends BaseAdapter {
 
+    //Endpoint for youtube view for trailers.
     private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
+
+    private static final String TAG = TrailerListAdapter.class.getSimpleName();
 
     Context context;
     List<TrailerModel> trailerModels;
@@ -30,8 +34,13 @@ public class TrailerListAdapter extends BaseAdapter {
     public TrailerListAdapter(Context context, List<TrailerModel> trailerModels) {
         this.context = context;
         this.trailerModels = trailerModels;
-        layoutInflater = (LayoutInflater)context.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        try {
+            layoutInflater = (LayoutInflater)context.
+                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        } catch (Exception e) {
+            Log.e(TAG,"Exception: "+e);
+        }
+
     }
 
     @Override
