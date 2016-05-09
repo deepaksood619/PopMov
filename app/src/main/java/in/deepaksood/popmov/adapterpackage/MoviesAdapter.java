@@ -1,4 +1,4 @@
-package in.deepaksood.popmov;
+package in.deepaksood.popmov.adapterpackage;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,17 +6,19 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import in.deepaksood.popmov.master_detail_package.MovieDetailActivity;
+import in.deepaksood.popmov.master_detail_package.MovieDetailFragment;
+import in.deepaksood.popmov.master_detail_package.MovieListActivity;
+import in.deepaksood.popmov.R;
 import in.deepaksood.popmov.moviemodelpackage.MovieModel;
 
 /**
@@ -24,7 +26,6 @@ import in.deepaksood.popmov.moviemodelpackage.MovieModel;
  */
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
-    private static final String TAG = MoviesAdapter.class.getSimpleName();
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w500/";
 
     List<MovieModel> movieModels;
@@ -61,9 +62,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-
-        Log.v(TAG,"url: "+BASE_URL+movieModels.get(position).getPoster_path());
         Picasso.with(context).load(BASE_URL+movieModels.get(position).getPoster_path()).into(holder.ivMoviePoster);
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,18 +73,17 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 //                    arguments.putString(MovieDetailFragment.ARG_ITEM_ID, holder.mItem.id);
                     MovieDetailFragment fragment = new MovieDetailFragment();
                     fragment.setArguments(arguments);
-
+                    MovieListActivity.lastLocationAccessed = position;
                     fragmentManager.beginTransaction()
                             .replace(R.id.movie_detail_container, fragment)
                             .commit();
 
                 } else {
                     Context context = v.getContext();
-                    Log.v(TAG,"pos: "+position);
 
                     Intent intent = new Intent(context, MovieDetailActivity.class);
                     intent.putExtra("MOVIE_OBJECT", movieModels.get(position));
-
+                    MovieListActivity.lastLocationAccessed = position;
                     context.startActivity(intent);
                 }
             }

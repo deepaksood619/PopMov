@@ -12,8 +12,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_favorite_border"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_margin="4dp"/>
+            android:layout_margin="4dp"
+            android:contentDescription="@string/cd_movie_poster"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,11 +32,13 @@
                     android:id="@+id/iv_detail_movie_poster"
                     android:layout_width="130dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/placeholder_movie_item_image"/>
+                    android:src="@drawable/placeholder_movie_item_image"
+                    android:contentDescription="@string/cd_movie_poster"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
                     android:layout_marginLeft="16dp"
                     android:gravity="center_vertical"
                     android:orientation="vertical">
@@ -43,7 +47,7 @@
                         android:id="@+id/tv_original_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="original title"
+                        android:text="@string/ph_title"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="@color/text_black"
                         android:textStyle="bold"/>
@@ -52,19 +56,19 @@
                         android:id="@+id/tv_release_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="release date"/>
+                        android:text="@string/ph_release_date"/>
 
                     <TextView
                         android:id="@+id/tv_rating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="rating"/>
+                        android:text="@string/ph_rating"/>
 
                     <TextView
                         android:id="@+id/tv_language"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="language"/>
+                        android:text="@string/ph_language"/>
 
                 </LinearLayout>
 
@@ -81,7 +85,7 @@
                 android:id="@+id/tv_overview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="overview"/>
+                android:text="@string/ph_overview"/>
 
             <View
                 android:layout_width="wrap_content"
@@ -93,7 +97,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Trailers -"
+                android:text="@string/ph_trailers"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <ListView
@@ -113,7 +117,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reviews -"
+                android:text="@string/ph_reviews"
                 android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <ListView

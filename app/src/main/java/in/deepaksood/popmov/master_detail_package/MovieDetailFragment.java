@@ -1,6 +1,8 @@
-package in.deepaksood.popmov;
+package in.deepaksood.popmov.master_detail_package;
 
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
@@ -28,22 +30,28 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.deepaksood.popmov.R;
 import in.deepaksood.popmov.moviemodelpackage.MovieModel;
 import in.deepaksood.popmov.adapterpackage.ReviewListAdapter;
 import in.deepaksood.popmov.moviemodelpackage.ReviewModel;
 import in.deepaksood.popmov.adapterpackage.TrailerListAdapter;
 import in.deepaksood.popmov.moviemodelpackage.TrailerModel;
+import in.deepaksood.popmov.preferencemanagerpackage.PrefManager;
+import in.deepaksood.popmov.utilitypackage.Utility;
 
+/**
+ * Created by deepak on 8/5/16.
+ */
 public class MovieDetailFragment extends Fragment {
 
     private static final String TAG = MovieDetailFragment.class.getSimpleName();
-    private static final String api_key="ed3e485287a973b1d147b39aedff970b";
+    private static String api_key="";
     private static final String BASE_COVER_URL = "http://image.tmdb.org/t/p/w780/";
     private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p/w500/";
 
-    MovieModel movieModel;
+    private MovieModel movieModel;
     List<TrailerModel> trailerModelList = new ArrayList<>();
-    List<ReviewModel> reviewModelList = new ArrayList<>();
+    private List<ReviewModel> reviewModelList = new ArrayList<>();
 
     ImageView ivSetFav;
 
@@ -53,6 +61,17 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Getting apiKey from local.properties
+        try {
+            ApplicationInfo applicationInfo = getActivity().getPackageManager()
+                    .getApplicationInfo(getActivity().getPackageName(),
+                            PackageManager.GET_META_DATA);
+            Bundle bundle = applicationInfo.metaData;
+            api_key = bundle.getString("api_key");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         if (getArguments().containsKey("MOVIE_OBJECT")) {
 
@@ -77,7 +96,7 @@ public class MovieDetailFragment extends Fragment {
         }
     }
 
-    ListView lvTrailers;
+    private ListView lvTrailers;
     ListView lvReviews;
 
     @Override
@@ -97,9 +116,9 @@ public class MovieDetailFragment extends Fragment {
 
         tvOriginalTitle.setText(movieModel.getOriginal_title());
         tvReleaseDate.setText(movieModel.getRelease_date());
-        tvRating.setText("Rating: "+Float.toString(movieModel.getVote_average())+"/10");
-        tvLanguage.setText("Original language: "+movieModel.getOriginal_language());
-        tvOverview.setText("Overview: "+movieModel.getOverview());
+        tvRating.setText(String.format("Rating: %s/10", Float.toString(movieModel.getVote_average())));
+        tvLanguage.setText(String.format("Original language: %s", movieModel.getOriginal_language()));
+        tvOverview.setText(String.format("Overview: %s", movieModel.getOverview()));
 
         Picasso.with(getContext())
                 .load(BASE_POSTER_URL +movieModel.getPoster_path())
@@ -108,7 +127,6 @@ public class MovieDetailFragment extends Fragment {
                 .into(ivDetailMoviePoster);
 
         String urlTrailers = buildQuery(String.valueOf(movieModel.getId()),"videos");
-        Log.v(TAG,"usl: "+urlTrailers);
         requestDataTrailers(urlTrailers);
         String urlReviews = buildQuery(String.valueOf(movieModel.getId()),"reviews");
         requestDataReviews(urlReviews);
@@ -116,16 +134,32 @@ public class MovieDetailFragment extends Fragment {
         lvTrailers = (ListView) rootView.findViewById(R.id.lv_trailers);
         lvReviews = (ListView) rootView.findViewById(R.id.lv_reviews);
 
+        if(MovieListActivity.movieModelList.get(MovieListActivity.lastLocationAccessed).isFavorite())
+            ivSetFav.setImageResource(R.drawable.ic_favorite_solid);
+        else {
+            ivSetFav.setImageResource(R.drawable.ic_favorite_border);
+        }
+
+        final PrefManager prefManager = new PrefManager(getContext());
         ivSetFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!movieModel.isFavorite()) {
+                if(!MovieListActivity.movieModelList.get(MovieListActivity.lastLocationAccessed).isFavorite()) {
                     ivSetFav.setImageResource(R.drawable.ic_favorite_solid);
                     movieModel.setFavorite(true);
+
+                    MovieListActivity.favList.add(movieModel);
+                    MovieListActivity.movieModelList.get(MovieListActivity.lastLocationAccessed).setFavorite(true);
+
+                    prefManager.saveMovieModel(MovieListActivity.favList);
 
                 }
                 else {
                     ivSetFav.setImageResource(R.drawable.ic_favorite_border);
+                    MovieListActivity.favList.remove(MovieListActivity.lastLocationAccessed);
+                    prefManager.clearPref();
+                    prefManager.saveMovieModel(MovieListActivity.favList);
+                    MovieListActivity.movieModelList.get(MovieListActivity.lastLocationAccessed).setFavorite(false);
                     movieModel.setFavorite(false);
                 }
             }
@@ -135,7 +169,7 @@ public class MovieDetailFragment extends Fragment {
     }
 
 
-    public String buildQuery(String movieId, String query) {
+    private String buildQuery(String movieId, String query) {
         String url;
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")
@@ -151,14 +185,12 @@ public class MovieDetailFragment extends Fragment {
     }
 
     public void requestDataTrailers(String url) {
-        Log.v(TAG,"Request DAta for mobile");
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.v(TAG,"response: "+response);
                         final Gson gson = new Gson();
                         TrailerModel modelObject;
                         try {
@@ -174,7 +206,6 @@ public class MovieDetailFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Log.v(TAG,"size: "+trailerModelList.size());
                         lvTrailers.setAdapter(new TrailerListAdapter(getContext(), trailerModelList));
                         Utility.setListViewHeightBasedOnChildren(lvTrailers);
 
@@ -182,7 +213,7 @@ public class MovieDetailFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v(TAG,"response: "+error);
+                Log.e(TAG,"response: "+error);
             }
         });
 
@@ -190,15 +221,13 @@ public class MovieDetailFragment extends Fragment {
     }
 
 
-    public void requestDataReviews(String url) {
-        Log.v(TAG,"Request DAta for mobile");
+    private void requestDataReviews(String url) {
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.v(TAG,"response: "+response);
                         final Gson gson = new Gson();
                         ReviewModel modelObject;
                         try {
@@ -215,7 +244,6 @@ public class MovieDetailFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        Log.v(TAG,"size: "+reviewModelList.size());
                         lvReviews.setAdapter(new ReviewListAdapter(getContext(), reviewModelList));
                         Utility.setListViewHeightBasedOnChildren(lvReviews);
 
@@ -223,7 +251,7 @@ public class MovieDetailFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v(TAG,"response: "+error);
+                Log.e(TAG,"response: "+error);
             }
         });
 

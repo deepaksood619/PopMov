@@ -4,14 +4,20 @@
 
     <item
         android:id="@+id/menu_popular"
-        android:title="Popular"
+        android:title="@string/menu_title_popular"
         android:checkable="true"
         android:checked="true"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_top_rated"
-        android:title="Top Rated"
+        android:title="@string/menu_title_top_rated"
+        android:checkable="true"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_favorites"
+        android:title="@string/menu_title_favorites"
         android:checkable="true"
         app:showAsAction="never" />
 

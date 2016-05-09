@@ -12,6 +12,12 @@ android {
         versionName "1.0"
     }
     buildTypes {
+        debug {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            def api_key = properties.get('api_key')
+            resValue "string", "api_key", api_key
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

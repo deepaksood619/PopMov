@@ -3,13 +3,11 @@ package in.deepaksood.popmov.adapterpackage;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -21,7 +19,6 @@ import in.deepaksood.popmov.moviemodelpackage.TrailerModel;
  */
 public class TrailerListAdapter extends BaseAdapter {
 
-    private static final String TAG = TrailerListAdapter.class.getSimpleName();
     private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";
 
     Context context;

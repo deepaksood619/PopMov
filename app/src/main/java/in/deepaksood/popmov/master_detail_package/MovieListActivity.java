@@ -1,29 +1,23 @@
-package in.deepaksood.popmov;
+package in.deepaksood.popmov.master_detail_package;
 
-import android.content.Context;
-import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -34,26 +28,29 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import in.deepaksood.popmov.R;
+import in.deepaksood.popmov.adapterpackage.MoviesAdapter;
 import in.deepaksood.popmov.moviemodelpackage.MovieModel;
+import in.deepaksood.popmov.preferencemanagerpackage.PrefManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An activity representing a list of Movies. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link MovieDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
+ * Created by deepak on 8/5/16.
  */
+
 public class MovieListActivity extends AppCompatActivity {
 
     private static final String TAG = MovieListActivity.class.getSimpleName();
-    private static final String api_key="ed3e485287a973b1d147b39aedff970b";
-    private List<MovieModel> movieModelList = new ArrayList<>();
+    private static String api_key="";
+    public static List<MovieModel> movieModelList = new ArrayList<>();
     protected GridLayoutManager mGridLayoutManager;
-    protected MoviesAdapter mMoviesAdapter;
+
+    public static List<MovieModel> favList = new ArrayList<>();
+    public static int lastLocationAccessed = 0;
+
+    private CoordinatorLayout coordinatorLayout;
 
     private boolean mTwoPane;
 
@@ -64,20 +61,23 @@ public class MovieListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
 
+        //Getting apiKey from local.properties
+        try {
+            ApplicationInfo applicationInfo = this.getPackageManager()
+                    .getApplicationInfo(this.getPackageName(),
+                            PackageManager.GET_META_DATA);
+            Bundle bundle = applicationInfo.metaData;
+            api_key = bundle.getString("api_key");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         assert toolbar != null;
         toolbar.setTitle(getTitle());
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         mGridLayoutManager = new GridLayoutManager(this, 2);
 
@@ -97,14 +97,13 @@ public class MovieListActivity extends AppCompatActivity {
 
     }
 
-    private Menu menu;
-    private MenuItem popularItem, topRatedItem;
+    private MenuItem popularItem, topRatedItem, favoritesItem;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        this.menu = menu;
         popularItem = menu.findItem(R.id.menu_popular);
         topRatedItem = menu.findItem(R.id.menu_top_rated);
+        favoritesItem = menu.findItem(R.id.menu_favorites);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -116,6 +115,7 @@ public class MovieListActivity extends AppCompatActivity {
                 if(!item.isChecked()) {
                     item.setChecked(true);
                     topRatedItem.setChecked(false);
+                    favoritesItem.setChecked(false);
                     populateList("popular");
                 }
                 break;
@@ -124,9 +124,32 @@ public class MovieListActivity extends AppCompatActivity {
                 if(!item.isChecked()) {
                     item.setChecked(true);
                     popularItem.setChecked(false);
+                    favoritesItem.setChecked(false);
                     populateList("top_rated");
                 }
                 break;
+
+            case R.id.menu_favorites:
+                if(!item.isChecked()) {
+
+                    PrefManager prefManager = new PrefManager(this);
+
+                    List<MovieModel> temp = prefManager.getMovieModel();
+
+                    if(temp != null) {
+                        movieModelList.clear();
+                        movieModelList = temp;
+                        setupRecyclerView((RecyclerView) recyclerView);
+                        item.setChecked(true);
+                        topRatedItem.setChecked(false);
+                        popularItem.setChecked(false);
+                    }
+                    else {
+                        Snackbar.make(coordinatorLayout, "No favorite movie found", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+
+                }
         }
 
         return super.onOptionsItemSelected(item);
@@ -135,7 +158,6 @@ public class MovieListActivity extends AppCompatActivity {
     public void populateList(String string) {
         movieModelList.clear();
         String url = buildQuery(string);
-        Log.v(TAG,"finalUrl: "+url);
         requestData(url);
     }
 
@@ -154,14 +176,11 @@ public class MovieListActivity extends AppCompatActivity {
     }
 
     public void requestData(String url) {
-        Log.v(TAG,"Request DAta");
-
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.v(TAG,"response: "+response);
                         final Gson gson = new Gson();
                         MovieModel modelObject;
                         try {
@@ -177,14 +196,13 @@ public class MovieListActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        Log.v(TAG,"size: "+movieModelList.size());
 
                         setupRecyclerView((RecyclerView) recyclerView);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v(TAG,"response: "+error);
+                Log.e(TAG,"response: "+error);
             }
         });
 
@@ -194,5 +212,24 @@ public class MovieListActivity extends AppCompatActivity {
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setLayoutManager(mGridLayoutManager);
         recyclerView.setAdapter(new MoviesAdapter(movieModelList, mTwoPane, getSupportFragmentManager(), this));
+    }
+
+    boolean doubleBackToExitPressedOnce = false;
+    @Override
+    public void onBackPressed() {
+        if(doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+        }
+        else {
+            this.doubleBackToExitPressedOnce = true;
+            Snackbar.make(coordinatorLayout, "Please click BACK again to exit", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce = false;
+                }
+            }, 2000);
+        }
     }
 }

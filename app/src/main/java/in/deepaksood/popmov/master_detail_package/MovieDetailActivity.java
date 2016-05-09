@@ -1,31 +1,17 @@
-package in.deepaksood.popmov;
+package in.deepaksood.popmov.master_detail_package;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
-import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
-
-import in.deepaksood.popmov.moviemodelpackage.MovieModel;
+import in.deepaksood.popmov.R;
 
 /**
- * An activity representing a single Movie detail screen. This
- * activity is only used narrow width devices. On tablet-size devices,
- * item details are presented side-by-side with a list of items
- * in a {@link MovieListActivity}.
+ * Created by deepak on 8/5/16.
  */
 public class MovieDetailActivity extends AppCompatActivity {
-
-    private static final String TAG = MovieDetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +25,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         if (savedInstanceState == null) {
 
@@ -72,5 +48,11 @@ public class MovieDetailActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
     }
 }

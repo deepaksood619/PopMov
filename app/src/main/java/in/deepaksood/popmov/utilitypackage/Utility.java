@@ -1,4 +1,4 @@
-package in.deepaksood.popmov;
+package in.deepaksood.popmov.utilitypackage;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -6,7 +6,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 /**
- * Created by deepak on 8/5/16.
+ * Created by deepak on 8/5/16. Project-PopMov.
  */
 public class Utility {
     public static void setListViewHeightBasedOnChildren(ListView listView) {

@@ -7,7 +7,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="in.deepaksood.popmov.MovieListActivity">
+    tools:context=".master_detail_package.MovieListActivity">
 
     <!--
     This layout is a two-pane layout for the Movies
@@ -24,7 +24,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:context="in.deepaksood.popmov.MovieListActivity"
+        tools:context=".master_detail_package.MovieListActivity"
         tools:listitem="@layout/movie_list_content" />
 
     <FrameLayout

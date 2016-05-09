@@ -1,7 +1,6 @@
 package in.deepaksood.popmov.adapterpackage;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,13 +27,11 @@ public class ReviewListAdapter extends BaseAdapter {
     public ReviewListAdapter(Context context, List<ReviewModel> reviewModels) {
         this.context = context;
         this.reviewModels = reviewModels;
-        Log.v(TAG,"size1: "+this.reviewModels.size());
-        Log.v(TAG,"size2: "+reviewModels.size());
         try {
             layoutInflater = (LayoutInflater)context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         } catch (Exception e) {
-            Log.v(TAG,"Exception e: "+e);
+            Log.e(TAG,"Exception e: "+e);
         }
 
     }

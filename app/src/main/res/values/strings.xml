@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">PopMov</string>
     <string name="title_movie_detail">Movie Detail</string>
+    <string name="menu_title_popular">Popular</string>
+    <string name="menu_title_top_rated">Top Rated</string>
+    <string name="menu_title_favorites">Favorites</string>
+    <string name="cd_movie_poster">Movie Poster</string>
+    <string name="cd_play_trailer">Play Trailer</string>
+    <string name="cd_movie_cover_poster">Movie Cover Poster</string>
+    <string name="ph_title">original title</string>
+    <string name="ph_release_date">release date</string>
+    <string name="ph_rating">rating</string>
+    <string name="ph_language">language</string>
+    <string name="ph_overview">overview</string>
+    <string name="ph_trailers">Trailers -</string>
+    <string name="ph_reviews">Reviews -</string>
+    <string name="ph_author_name">author name</string>
+    <string name="ph_content">content</string>
 </resources>

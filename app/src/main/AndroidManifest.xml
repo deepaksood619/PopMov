@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="in.deepaksood.popmov">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,26 +10,42 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
+        android:fullBackupContent="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MovieListActivity"
+            android:name=".master_detail_package.MovieListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MovieDetailActivity"
+            android:name=".master_detail_package.MovieDetailActivity"
             android:label="@string/title_movie_detail"
-            android:parentActivityName=".MovieListActivity"
+            android:parentActivityName=".master_detail_package.MovieListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="in.deepaksood.popmov.MovieListActivity" />
+                android:value=".master_detail_package.MovieListActivity" />
+
+            <!--action.VIEW is used for deep linking the application to google search-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "http://www.deepaksood.branded.me” -->
+                <data android:scheme="http"
+                    android:host="www.deepaksood.branded.me" />
+            </intent-filter>
+
         </activity>
+
+        <meta-data android:name="api_key"
+            tools:replace="android:value"
+            android:value="@string/api_key">
+        </meta-data>
+
     </application>
 
 </manifest>
