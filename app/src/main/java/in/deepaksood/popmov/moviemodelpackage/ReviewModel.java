@@ -3,6 +3,8 @@ package in.deepaksood.popmov.moviemodelpackage;
 /**
  * Created by deepak on 8/5/16.
  */
+
+// reviewmodel object for storing the json fetched from TMDB for the movie id.
 public class ReviewModel {
     private String id;
     private String author;

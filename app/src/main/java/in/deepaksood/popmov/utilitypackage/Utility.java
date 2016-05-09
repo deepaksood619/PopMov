@@ -8,6 +8,8 @@ import android.widget.ListView;
 /**
  * Created by deepak on 8/5/16. Project-PopMov.
  */
+
+//utility class is used to show the correct size of layout because listview is used inside scrollview.
 public class Utility {
     public static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
@@ -23,7 +25,6 @@ public class Utility {
             listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
             totalHeight += listItem.getMeasuredHeight();
         }
-
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);

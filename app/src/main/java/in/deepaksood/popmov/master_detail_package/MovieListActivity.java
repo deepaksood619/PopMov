@@ -40,21 +40,33 @@ import java.util.List;
  * Created by deepak on 8/5/16.
  */
 
+// Main Activity Entry point for the application
+
 public class MovieListActivity extends AppCompatActivity {
 
     private static final String TAG = MovieListActivity.class.getSimpleName();
     private static String api_key="";
+
+    // list of MovieModel for storing the details fetched from TheMovieDB
     public static List<MovieModel> movieModelList = new ArrayList<>();
+
+    // layoutManger for grid view in recycler view using cardview
     protected GridLayoutManager mGridLayoutManager;
 
+    // list of MovieModel that are set as favorites
     public static List<MovieModel> favList = new ArrayList<>();
     public static int lastLocationAccessed = 0;
 
+    //Used for getting view of the activity for SnackBar.
     private CoordinatorLayout coordinatorLayout;
 
+    // save state if the device is tablet or mobile
+    //if tablet if will show a master/detail flow
+    //if mobile it will show only a master list with onClick to a new detail activity.
     private boolean mTwoPane;
 
-    View recyclerView;
+    //Recycler view for displaying list.
+    private View recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +84,16 @@ public class MovieListActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        //initializing coordinator layout
         coordinatorLayout = (CoordinatorLayout) findViewById(R.id.cl_main);
 
+        //using toolbar as default actionbar. Material Design specification
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         assert toolbar != null;
         toolbar.setTitle(getTitle());
 
+        //initializing gridLayoutmanager for number of column = 2
         mGridLayoutManager = new GridLayoutManager(this, 2);
 
         recyclerView = findViewById(R.id.movie_list);
@@ -93,10 +108,12 @@ public class MovieListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        //default view will show the list of popular movies fetched from TMDB
         populateList("popular");
 
     }
 
+    //for checkbox MenuItem. Only one will be active at a time. (like radioCheckBox)
     private MenuItem popularItem, topRatedItem, favoritesItem;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -131,9 +148,7 @@ public class MovieListActivity extends AppCompatActivity {
 
             case R.id.menu_favorites:
                 if(!item.isChecked()) {
-
                     PrefManager prefManager = new PrefManager(this);
-
                     List<MovieModel> temp = prefManager.getMovieModel();
 
                     if(temp != null) {
@@ -151,16 +166,17 @@ public class MovieListActivity extends AppCompatActivity {
 
                 }
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    // This method will clear the movieModelList and populate it with new data fetched from TMDB
     public void populateList(String string) {
         movieModelList.clear();
         String url = buildQuery(string);
         requestData(url);
     }
 
+    // Uses Uri builder to build query for fetching data from TMDB
     public String buildQuery(String urlQuery) {
         String url;
         Uri.Builder builder = new Uri.Builder();
@@ -175,6 +191,8 @@ public class MovieListActivity extends AppCompatActivity {
         return url;
     }
 
+    // uses volley for fetching data from TMDB
+    //used gson for mapping from json to MovieModel object
     public void requestData(String url) {
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
                 url,
@@ -209,11 +227,14 @@ public class MovieListActivity extends AppCompatActivity {
         Volley.newRequestQueue(this).add(stringRequest);
     }
 
+    // method for setting up the recycler view
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setLayoutManager(mGridLayoutManager);
         recyclerView.setAdapter(new MoviesAdapter(movieModelList, mTwoPane, getSupportFragmentManager(), this));
     }
 
+    // implementation for using double back press to exit.
+    // stops unintentional exit from application, giving user the final exit point.
     boolean doubleBackToExitPressedOnce = false;
     @Override
     public void onBackPressed() {

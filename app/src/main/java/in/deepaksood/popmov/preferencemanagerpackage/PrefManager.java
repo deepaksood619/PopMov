@@ -15,16 +15,16 @@ import in.deepaksood.popmov.moviemodelpackage.MovieModel;
 /**
  * Created by deepak on 29/4/16.
  */
+
+//prefmanager class for performing all operations related to storing and retriving movies from and to preference manager.
 public class PrefManager {
 
-    SharedPreferences pref;
-    SharedPreferences.Editor editor;
-    Context context;
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+    private Context context;
 
-    int PRIVATE_MODE = 0;
-
+    private int PRIVATE_MODE = 0;
     private static final String PREF_NAME = "PopMov";
-
     private static String KEY_MOVIE_ID = "MOVIE_ID_ARR";
 
     @SuppressLint("CommitPrefEdits")
@@ -35,7 +35,6 @@ public class PrefManager {
     }
 
     public void saveMovieModel(List<MovieModel> favList) {
-
         Gson gson = new Gson();
         String json = gson.toJson(favList);
         editor.putString(KEY_MOVIE_ID,json);
@@ -44,13 +43,12 @@ public class PrefManager {
     }
 
     public List<MovieModel> getMovieModel() {
-
         String json = pref.getString(KEY_MOVIE_ID, "");
-
         Type type = new TypeToken<List<MovieModel>>(){}.getType();
         return new Gson().fromJson(json, type);
     }
 
+    //method to clear all the favorites from preference manager.
     public void clearPref() {
         editor.clear();
         editor.commit();

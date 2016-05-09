@@ -42,10 +42,14 @@ import in.deepaksood.popmov.utilitypackage.Utility;
 /**
  * Created by deepak on 8/5/16.
  */
+
+// Fragment for displaying Movie Detail for the selected movie with its trailers and user reviews.
 public class MovieDetailFragment extends Fragment {
 
     private static final String TAG = MovieDetailFragment.class.getSimpleName();
     private static String api_key="";
+
+    //Entry point for TMDB for accessing cover and base url for movie poster.
     private static final String BASE_COVER_URL = "http://image.tmdb.org/t/p/w780/";
     private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p/w500/";
 
@@ -55,6 +59,7 @@ public class MovieDetailFragment extends Fragment {
 
     ImageView ivSetFav;
 
+    // default constructor for initializing fragment.
     public MovieDetailFragment() {
     }
 
@@ -96,8 +101,9 @@ public class MovieDetailFragment extends Fragment {
         }
     }
 
+    // listview to display trailers and reviews without scollers. Can use linearlayout instead of listview.
     private ListView lvTrailers;
-    ListView lvReviews;
+    private ListView lvReviews;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,10 +122,13 @@ public class MovieDetailFragment extends Fragment {
 
         tvOriginalTitle.setText(movieModel.getOriginal_title());
         tvReleaseDate.setText(movieModel.getRelease_date());
+
+        //used string.format for concatenating key to its value.
         tvRating.setText(String.format("Rating: %s/10", Float.toString(movieModel.getVote_average())));
         tvLanguage.setText(String.format("Original language: %s", movieModel.getOriginal_language()));
         tvOverview.setText(String.format("Overview: %s", movieModel.getOverview()));
 
+        // used picasso for getting the image from url and displaying it in imageview.
         Picasso.with(getContext())
                 .load(BASE_POSTER_URL +movieModel.getPoster_path())
                 .placeholder(R.drawable.placeholder_movie_item_image)
@@ -140,6 +149,7 @@ public class MovieDetailFragment extends Fragment {
             ivSetFav.setImageResource(R.drawable.ic_favorite_border);
         }
 
+        //prefManager for saving and retriving of favorites movies from persistent storage
         final PrefManager prefManager = new PrefManager(getContext());
         ivSetFav.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,7 +178,7 @@ public class MovieDetailFragment extends Fragment {
         return rootView;
     }
 
-
+    // Uses Uri builder to build query for fetching data from TMDB
     private String buildQuery(String movieId, String query) {
         String url;
         Uri.Builder builder = new Uri.Builder();
@@ -184,6 +194,8 @@ public class MovieDetailFragment extends Fragment {
         return url;
     }
 
+    //request trailer data from TMDB using volley
+    //used gson for mapping from json to TrailerModel Object
     public void requestDataTrailers(String url) {
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
@@ -220,7 +232,8 @@ public class MovieDetailFragment extends Fragment {
         Volley.newRequestQueue(this.getActivity()).add(stringRequest);
     }
 
-
+    //requesting user reviews data from TMDB using volley
+    //used gson for mapping from json to ReviewModel Object
     private void requestDataReviews(String url) {
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET,

@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="in.deepaksood.popmov">
 
+    <!-- permission for accessing data from TheMovieDB database. Volley Library used for fetching data off the UI thread -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Supports RTL for right to left oriented languages -->
+    <!-- fullBackupContent true for storing and retrieving the state of application when switched from
+            onPause to onResume or onStart to onDestroy ex. in device orientation change-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -41,11 +45,11 @@
 
         </activity>
 
+        <!-- Retrieving and storing the api_key value from local.properties to strings.xml resource file in values package folder-->
         <meta-data android:name="api_key"
             tools:replace="android:value"
             android:value="@string/api_key">
         </meta-data>
 
     </application>
-
 </manifest>

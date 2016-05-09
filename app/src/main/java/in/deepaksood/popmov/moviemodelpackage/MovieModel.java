@@ -5,6 +5,9 @@ import java.io.Serializable;
 /**
  * Created by deepak on 13/4/16.
  */
+
+//movie model object for saving json data to objects.
+    //implementing serializable to let it pass through intents and save in preference manager
 public class MovieModel implements Serializable {
 
     private String poster_path;

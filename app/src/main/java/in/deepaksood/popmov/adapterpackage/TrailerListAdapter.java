@@ -17,6 +17,8 @@ import in.deepaksood.popmov.moviemodelpackage.TrailerModel;
 /**
  * Created by deepak on 8/5/16.
  */
+
+//adapter for trailer listview
 public class TrailerListAdapter extends BaseAdapter {
 
     private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v=";

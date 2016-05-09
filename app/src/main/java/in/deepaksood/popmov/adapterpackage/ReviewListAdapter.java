@@ -16,6 +16,8 @@ import in.deepaksood.popmov.moviemodelpackage.ReviewModel;
 /**
  * Created by deepak on 8/5/16.
  */
+
+//adapter for review listview
 public class ReviewListAdapter extends BaseAdapter {
 
     private static final String TAG = ReviewListAdapter.class.getSimpleName();

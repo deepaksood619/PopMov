@@ -24,6 +24,8 @@ import in.deepaksood.popmov.moviemodelpackage.MovieModel;
 /**
  * Created by deepak on 8/5/16.
  */
+
+//Adapter for diplaying movies in recyclerview
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
 
     private static final String BASE_URL = "http://image.tmdb.org/t/p/w500/";

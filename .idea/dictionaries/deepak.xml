@@ -2,8 +2,10 @@
   <dictionary name="deepak">
     <words>
       <w>deepak</w>
+      <w>listview</w>
       <w>snackbar</w>
       <w>themoviedb</w>
+      <w>tmdb</w>
     </words>
   </dictionary>
 </component>
