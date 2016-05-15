@@ -54,18 +54,51 @@ public class ReviewListAdapter extends BaseAdapter {
     }
 
     public class Holder {
-        TextView tvPlayTrailer;
+        TextView tvAuthorName;
         TextView tvReviewContent;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        // This implementation is giving error :
+        // java.lang.NullPointerException: Attempt to invoke virtual method 'void android.view.View.measure(int, int)' on a null object reference
+        //at in.deepaksood.popmov.utilitypackage.Utility.setListViewHeightBasedOnChildren(Utility.java:25)
+
+        // Therefore i had used the old method for inflating views. Will use it next time please consider this in this project.
+        // Also the number of trailers is at max 7 in every movie.
+        // also i was not able to make a onClickListener in rowView through ViewHolder pattern.
+
+        // I have used two listview inside scrollview which is never encouraged because it may cause bad user experience.
+        // But in this project i have used this pattern therefore to find the correct length of the whole layout i have used
+        // utility.java which finds the total height of the layout without making listview scrollable hence it is shown to
+        //user as a linear layout and not as a listview.
+
+        /*LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        Holder holder;
+
+        if(convertView == null) {
+            View rowView = inflater.inflate(R.layout.trailer_list_item, parent, false);
+            holder = new Holder();
+            holder.tvPlayTrailer = (TextView) rowView.findViewById(R.id.tv_play_trailer);
+            rowView.setTag(holder);
+        }
+        else {
+            holder = (Holder) convertView.getTag();
+        }
+        holder.tvPlayTrailer.setText(trailerModels.get(position).getName());
+        return convertView;*/
+
+
         Holder holder = new Holder();
         View rowView = layoutInflater.inflate(R.layout.review_list_item, null);
 
-        holder.tvPlayTrailer = (TextView) rowView.findViewById(R.id.tv_play_trailer);
+
+        holder.tvAuthorName = (TextView) rowView.findViewById(R.id.tv_author_name);
         holder.tvReviewContent = (TextView) rowView.findViewById(R.id.tv_review_content);
-        holder.tvPlayTrailer.setText(reviewModels.get(position).getAuthor());
+        holder.tvAuthorName.setText(reviewModels.get(position).getAuthor());
         holder.tvReviewContent.setText(reviewModels.get(position).getContent());
 
         return rowView;

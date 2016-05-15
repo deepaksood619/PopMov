@@ -120,13 +120,12 @@ public class MovieDetailFragment extends Fragment {
         TextView tvLanguage = (TextView) rootView.findViewById(R.id.tv_language);
         TextView tvOverview = (TextView) rootView.findViewById(R.id.tv_overview);
 
+        //Changes made according to the review, replaced string.format by getString(Resource id).
         tvOriginalTitle.setText(movieModel.getOriginal_title());
-        tvReleaseDate.setText(movieModel.getRelease_date());
-
-        //used string.format for concatenating key to its value.
-        tvRating.setText(String.format("Rating: %s/10", Float.toString(movieModel.getVote_average())));
-        tvLanguage.setText(String.format("Original language: %s", movieModel.getOriginal_language()));
-        tvOverview.setText(String.format("Overview: %s", movieModel.getOverview()));
+        tvReleaseDate.setText(getString(R.string.set_release_date, movieModel.getRelease_date()));
+        tvRating.setText(getString(R.string.set_rating, movieModel.getVote_average()));
+        tvLanguage.setText(getString(R.string.set_language, movieModel.getOriginal_language()));
+        tvOverview.setText(getString(R.string.set_overview, movieModel.getOverview()));
 
         // used picasso for getting the image from url and displaying it in imageview.
         Picasso.with(getContext())

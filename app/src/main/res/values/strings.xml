@@ -8,10 +8,19 @@
     <string name="cd_play_trailer">Play Trailer</string>
     <string name="cd_movie_cover_poster">Movie Cover Poster</string>
     <string name="ph_title">original title</string>
-    <string name="ph_release_date">release date</string>
-    <string name="ph_rating">rating</string>
-    <string name="ph_language">language</string>
-    <string name="ph_overview">overview</string>
+
+    <string name="ph_release_date">Release date: 2016–04–27</string>
+    <string name="set_release_date">Release date: %1$s</string>
+
+    <string name="ph_rating">Rating: 8/10</string>
+    <string name="set_rating">Average Rating: %1$s/10</string>
+
+    <string name="ph_language">Original Language: en</string>
+    <string name="set_language">Original Language: %1$s</string>
+
+    <string name="ph_overview">Overview: This is a great Movie about a Android Developer</string>
+    <string name="set_overview">Overview: %1$s</string>
+
     <string name="ph_trailers">Trailers -</string>
     <string name="ph_reviews">Reviews -</string>
     <string name="ph_author_name">author name</string>
